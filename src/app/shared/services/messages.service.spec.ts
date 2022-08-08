@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
+import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 
 import { MessagesService } from './messages.service';
@@ -43,6 +44,8 @@ describe('MessagesService', () => {
           }
         ]
       } as KafkaSendMessage
+
+      expect(httpTestController).toHaveBeenCalledWith(expectedRequest);
     })
   })
 });
