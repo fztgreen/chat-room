@@ -36,7 +36,7 @@ describe('MessagesService', () => {
       let expectedRequest = {
         records: [
           {
-            key: Random.String(),
+            key: "",
             value: {
               user: user,
               message: message
@@ -45,7 +45,10 @@ describe('MessagesService', () => {
         ]
       } as KafkaSendMessage
 
-      expect(httpTestController).toHaveBeenCalledWith(expectedRequest);
+
+      const req = httpTestController.expectOne("");
+      expect(req.request.body).toEqual(expectedRequest);
+      expect(req.request.method).toEqual("POST");
       httpTestController.verify();
     })
   })

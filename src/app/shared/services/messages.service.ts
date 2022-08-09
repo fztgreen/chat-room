@@ -1,13 +1,32 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
+import { KafkaSendMessage } from '../models/kafka-send-message';
+import { SendMessage } from '../models/send-message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagesService {
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   postMessage(user: string, message: string): Observable<void> {
-    throw new Error('Method not implemented.');
+    let expectedRequest = {
+      records: [
+        {
+          key: "",
+          value: {
+            user: user,
+            message: message
+          } as SendMessage
+        }
+      ]
+    } as KafkaSendMessage
+    
+    return this.http.post("", expectedRequest).pipe(
+      map(response => {
+        return void 0;
+      })
+    );
   }
 }
