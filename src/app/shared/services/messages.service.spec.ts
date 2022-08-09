@@ -31,7 +31,7 @@ describe('MessagesService', () => {
     it('calls http client with expected format', () => {
       let user = Random.String();
       let message = Random.String();
-      let response = service.postMessage(user, message);
+      let response = service.postMessage(user, message).subscribe();
 
       let expectedRequest = {
         records: [
@@ -46,6 +46,7 @@ describe('MessagesService', () => {
       } as KafkaSendMessage
 
       expect(httpTestController).toHaveBeenCalledWith(expectedRequest);
+      httpTestController.verify();
     })
   })
 });
