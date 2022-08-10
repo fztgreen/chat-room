@@ -46,7 +46,7 @@ describe('MessagesService', () => {
       } as KafkaSendMessage
 
 
-      const req = httpTestController.expectOne("");
+      const req = httpTestController.expectOne("http://localhost:8082/topics/chat1");
       expect(req.request.body).toEqual(expectedRequest);
       expect(req.request.method).toEqual("POST");
       httpTestController.verify();
