@@ -1,0 +1,8 @@
+kafka-topics --bootstrap-server localhost:9092 --list
+
+kafka-topics --bootstrap-server localhost:9092 --create --topic chat1
+
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic chat1 --from-beginning
+curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"records":[{"key":"key","value":"my first value"}]}' "http://localhost:8082/topics/chat1"
+
