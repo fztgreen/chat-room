@@ -23,7 +23,7 @@ export class MessagesService {
       ]
     } as KafkaSendMessage
     
-    return this.http.post("", expectedRequest).pipe(
+    return this.http.post("http://localhost:8082/topics/chat1", expectedRequest).pipe(
       map(response => {
         return void 0;
       })
