@@ -34,10 +34,10 @@ describe('ChatWindowComponent', () => {
   describe("sendText", () => {
     it('should send a message', () => {
       let text = Random.String();
+      component.user = Random.String();
       let result = component.sendText(text);
-      component.User = Random.String();
 
-      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.User, text);
+      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.user, text);
     });
   });
 });

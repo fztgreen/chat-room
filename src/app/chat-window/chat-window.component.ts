@@ -7,7 +7,7 @@ import { MessagesService } from '../shared/services/messages.service';
   styleUrls: ['./chat-window.component.css']
 })
 export class ChatWindowComponent implements OnInit {
-  User!: string;
+  user!: string;
   
   constructor(private messagesService: MessagesService) { }
 
@@ -15,6 +15,6 @@ export class ChatWindowComponent implements OnInit {
   }
 
   sendText(text: string) {
-    this.messagesService.postMessage("", text);
+    this.messagesService.postMessage(this.user, text);
   }  
 }
