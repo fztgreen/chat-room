@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
 import { MessagesService } from '../shared/services/messages.service';
-
 import { ChatWindowComponent } from './chat-window.component';
+import { of } from 'rxjs'
 
 describe('ChatWindowComponent', () => {
   let component: ChatWindowComponent;
@@ -11,6 +11,7 @@ describe('ChatWindowComponent', () => {
 
   beforeEach(async () => {
     messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage"]);
+    messagesServiceSpy.postMessage.and.returnValue(of(void 0));
 
     await TestBed.configureTestingModule({
       declarations: [ ChatWindowComponent ],
@@ -33,11 +34,11 @@ describe('ChatWindowComponent', () => {
 
   describe("sendText", () => {
     it('should send a message', () => {
-      let text = Random.String();
+      component.textMessageFormControl.setValue(Random.String());
       component.userFormControl.setValue(Random.String());
-      let result = component.sendText(text);
+      let result = component.sendText();
 
-      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.userFormControl.value, text);
+      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.userFormControl.value, component.textMessageFormControl.value);
     });
   });
 });
