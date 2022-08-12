@@ -67,15 +67,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "chat-room:build:production"
-            },
-            "development": {
-              "browserTarget": "chat-room:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
+          "options": {
+            "browserTarget": "chat-room:build",
+            "proxyConfig": "src/proxy.conf.json"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
