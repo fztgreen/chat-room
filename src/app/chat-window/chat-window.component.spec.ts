@@ -13,7 +13,10 @@ describe('ChatWindowComponent', () => {
     messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage"]);
 
     await TestBed.configureTestingModule({
-      declarations: [ ChatWindowComponent ]
+      declarations: [ ChatWindowComponent ],
+      providers: [
+        { provide: MessagesService, useValue: messagesServiceSpy}
+      ]
     })
     .compileComponents();
   });

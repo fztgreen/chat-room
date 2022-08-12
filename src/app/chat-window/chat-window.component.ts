@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessagesService } from '../shared/services/messages.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -7,12 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatWindowComponent implements OnInit {
   
-  constructor() { }
+  constructor(private messagesService: MessagesService) { }
 
   ngOnInit(): void {
   }
 
   sendText(text: string) {
-    throw new Error('Method not implemented.'); 
+    this.messagesService.postMessage("", text);
   }  
 }
