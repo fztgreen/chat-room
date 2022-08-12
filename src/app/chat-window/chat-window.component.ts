@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MessagesService } from '../shared/services/messages.service';
 import { tap } from 'rxjs';
 
@@ -10,8 +10,8 @@ import { tap } from 'rxjs';
 })
 export class ChatWindowComponent implements OnInit {
   
-  userFormControl = new FormControl('');
-  textMessageFormControl = new FormControl('');
+  userFormControl = new UntypedFormControl('');
+  textMessageFormControl = new UntypedFormControl('');
 
   constructor(private messagesService: MessagesService) { }
 
