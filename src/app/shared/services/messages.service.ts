@@ -23,9 +23,11 @@ export class MessagesService {
       ]
     } as KafkaSendMessage
 
-    debugger;
+    let headers = new HttpHeaders();
+    headers = headers.append("Content-Type", "application/vnd.kafka.json.v2+json")
+    headers = headers.append("Accept", "application/vnd.kafka.v2+json");
     
-    return this.http.post("http://localhost:8082/topics/chat1", expectedRequest).pipe(
+    return this.http.post("http://localhost:8082/topics/chat1", expectedRequest, {headers: headers}).pipe(
       map(() => {
         return void 0;
       })
