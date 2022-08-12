@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-window.component.css']
 })
 export class ChatWindowComponent implements OnInit {
-
+  
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  sendText(text: string) {
+    throw new Error('Method not implemented.'); 
+  }  
 }

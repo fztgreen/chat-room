@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {MatInputModule} from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientTestingModule
+    HttpClientTestingModule,
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
@@ -43,13 +44,17 @@ describe('MessagesService', () => {
             } as SendMessage
           }
         ]
-      } as KafkaSendMessage
+      } as KafkaSendMessage;
 
+      let expectedHeaders = new HttpHeaders();
+      expectedHeaders.set("Content-Type", "application/vnd.kafka.json.v2+json");
+      expectedHeaders.set("Accept", "application/vnd.kafka.v2+json");
 
       const req = httpTestController.expectOne("http://localhost:8082/topics/chat1");
+      expect(req.request.headers).toEqual(expectedHeaders);
       expect(req.request.body).toEqual(expectedRequest);
       expect(req.request.method).toEqual("POST");
       httpTestController.verify();
-    })
-  })
+    });
+  });
 });
