@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MessagesService } from '../shared/services/messages.service';
 
 @Component({
@@ -7,14 +8,15 @@ import { MessagesService } from '../shared/services/messages.service';
   styleUrls: ['./chat-window.component.css']
 })
 export class ChatWindowComponent implements OnInit {
-  user!: string;
   
+  userFormControl = new FormControl('');
+
   constructor(private messagesService: MessagesService) { }
 
   ngOnInit(): void {
   }
 
   sendText(text: string) {
-    this.messagesService.postMessage(this.user, text);
+    this.messagesService.postMessage(this.userFormControl.value, text);
   }  
 }
