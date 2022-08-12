@@ -7,6 +7,7 @@ import { MessagesService } from '../shared/services/messages.service';
   styleUrls: ['./chat-window.component.css']
 })
 export class ChatWindowComponent implements OnInit {
+  User!: string;
   
   constructor(private messagesService: MessagesService) { }
 

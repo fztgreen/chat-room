@@ -35,8 +35,9 @@ describe('ChatWindowComponent', () => {
     it('should send a message', () => {
       let text = Random.String();
       let result = component.sendText(text);
-      
-      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith("", text);
+      component.User = Random.String();
+
+      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.User, text);
     });
   });
 });
