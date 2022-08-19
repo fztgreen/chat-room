@@ -6,3 +6,28 @@ kafka-topics --bootstrap-server localhost:9092 --create --topic chat1
 kafka-console-consumer --bootstrap-server localhost:9092 --topic chat1 --from-beginning
 curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"records":[{"key":"key","value":"my first value"}]}' "http://localhost:8082/topics/chat1"
 
+
+# Create a consumer for JSON data, starting at the beginning of the topic's
+# log and subscribe to a topic. Then consume some data using the base URL in the first response.
+# Finally, close the consumer with a DELETE to make it leave the group and clean up
+# its resources.
+curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' http://localhost:8082/consumers/my_json_consumer
+
+# Expected output from preceding command
+ {
+  "instance_id":"my_consumer_instance",
+  "base_uri":"http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance"
+ }
+
+curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"topics":["chat1"]}' http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance/subscription
+# No content in response
+
+curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance/records
+
+# Expected output from preceding command
+  [
+   {"key":null,"value":{"foo":"bar"},"partition":0,"offset":0,"topic":"jsontest"}
+  ]
+
+curl -X DELETE -H "Content-Type: application/vnd.kafka.v2+json" http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance
+# No content in response

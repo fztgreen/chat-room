@@ -36,4 +36,13 @@ export class MessagesService {
       })
     );
   }
+
+  setupConsumer()
+  {
+  }
+
+  getNewestMessages()
+  {
+    
+  }
 }

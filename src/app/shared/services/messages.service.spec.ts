@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
+import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 
@@ -53,6 +54,33 @@ describe('MessagesService', () => {
       const req = httpTestController.expectOne("http://localhost:4200/api/topics/chat1");
 
       debugger;
+      expect(req.request.headers).toEqual(expectedHeaders);
+      expect(req.request.body).toEqual(expectedRequest);
+      expect(req.request.method).toEqual("POST");
+      httpTestController.verify();
+    });
+  });
+
+  describe('when setupConsumer is called', () => {
+    it('calls http client to create a kafka consumer on the proxy server', () => {
+      //curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" 
+      //--data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}'
+      // http://localhost:8082/consumers/my_json_consumer
+      let consumerName = Random.String();
+
+      let expectedRequest = {
+        name: "",
+        format: "",
+        "auto.offset.reset": "",
+      } as KafkaCreateConsumerRequest
+
+      let expectedHeaders = new HttpHeaders();
+      expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
+
+      let response = service.setupConsumer();
+      
+      const req = httpTestController.expectOne(`http://localhost:4200/api/consumers/${consumerName}`);
+
       expect(req.request.headers).toEqual(expectedHeaders);
       expect(req.request.body).toEqual(expectedRequest);
       expect(req.request.method).toEqual("POST");
