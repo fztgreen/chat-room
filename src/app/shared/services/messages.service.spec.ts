@@ -5,8 +5,6 @@ import { Random } from 'random-test-values';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
-import { map } from 'rxjs';
-
 import { MessagesService } from './messages.service';
 
 describe('MessagesService', () => {
