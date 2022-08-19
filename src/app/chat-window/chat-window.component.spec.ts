@@ -35,10 +35,10 @@ describe('ChatWindowComponent', () => {
   describe("sendText", () => {
     it('should send a message', () => {
       component.textMessageFormControl.setValue(Random.String());
-      component.userFormControl.setValue(Random.String());
+      component.nameFormControl.setValue(Random.String());
       let result = component.sendText();
 
-      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.userFormControl.value, component.textMessageFormControl.value);
+      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.nameFormControl.value, component.textMessageFormControl.value);
     });
   });
 });

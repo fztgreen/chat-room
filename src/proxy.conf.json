@@ -1,7 +1,11 @@
 {
-	"/topics": {
+	"/api/*": {
 		"target": "http://localhost:8082",
 		"secure": false,
-		"logLevel": "debug"
+		"logLevel": "debug",
+		"changeOrigin": false,
+		"pathRewrite": {
+			"^/api/topics/*": "topics/"
+		  }
 	}
 }

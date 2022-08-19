@@ -1,4 +1,4 @@
 <p>chat-window works!</p>
-<input matInput label="Enter your name" formControl="nameFormControl">
-<input matInput label="Enter a message" formControl="textMessageFormControl">
+<input matInput label="Enter your name" [formControl]="nameFormControl">
+<input matInput label="Enter a message" [formControl]="textMessageFormControl">
 <button mat-button (click)="sendText()">Click me!</button>

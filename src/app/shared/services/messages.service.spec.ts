@@ -50,7 +50,7 @@ describe('MessagesService', () => {
       expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.json.v2+json")
       expectedHeaders = expectedHeaders.append("Accept", "application/vnd.kafka.v2+json");
 
-      const req = httpTestController.expectOne("http://localhost:8082/topics/chat1");
+      const req = httpTestController.expectOne("http://localhost:4200/api/topics/chat1");
 
       debugger;
       expect(req.request.headers).toEqual(expectedHeaders);

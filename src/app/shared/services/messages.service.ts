@@ -10,7 +10,7 @@ import { SendMessage } from '../models/send-message';
 export class MessagesService {
   constructor(private http: HttpClient) { }
 
-  postMessage(user: string, message: string): Observable<void> {
+  postMessage(user: string | null, message: string | null): Observable<void> {
     let expectedRequest = {
       records: [
         {
@@ -24,10 +24,13 @@ export class MessagesService {
     } as KafkaSendMessage
 
     let headers = new HttpHeaders();
-    headers = headers.append("Content-Type", "application/vnd.kafka.json.v2+json")
+    headers = headers.append("Content-Type", "application/vnd.kafka.json.v2+json");
     headers = headers.append("Accept", "application/vnd.kafka.v2+json");
+    // headers = headers.append("Access-Control-Allow-Origin", "*");
     
-    return this.http.post("http://localhost:8082/topics/chat1", expectedRequest, {headers: headers}).pipe(
+    console.log(expectedRequest)
+
+    return this.http.post("http://localhost:4200/api/topics/chat1", expectedRequest, {headers: headers}).pipe(
       map(() => {
         return void 0;
       })
