@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Random } from 'random-test-values';
 import { map, Observable, of } from 'rxjs';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
@@ -50,7 +51,7 @@ export class MessagesService {
 
     return this.http.post(`http://localhost:4200/api/consumers/${consumerName}`, request, {headers: headers}).pipe(
       map(() => {
-        return "";
+        return Random.String();
       })
     )
   }
