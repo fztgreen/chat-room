@@ -5,6 +5,7 @@ import { Random } from 'random-test-values';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
+import { map } from 'rxjs';
 
 import { MessagesService } from './messages.service';
 
@@ -53,7 +54,6 @@ describe('MessagesService', () => {
 
       const req = httpTestController.expectOne("http://localhost:4200/api/topics/chat1");
 
-      debugger;
       expect(req.request.headers).toEqual(expectedHeaders);
       expect(req.request.body).toEqual(expectedRequest);
       expect(req.request.method).toEqual("POST");
@@ -83,5 +83,19 @@ describe('MessagesService', () => {
       expect(req.request.method).toEqual("POST");
       httpTestController.verify();
     });
+
+    it('returns the name of the created consumer', () => {
+      let consumerName = Random.String();
+
+      let response = service.setupConsumer(consumerName).subscribe({
+        next: p => {
+          expect(p).toBeTruthy();
+        }
+      });
+
+      const req = httpTestController.expectOne(() => true);
+      req.flush(consumerName);
+      httpTestController.verify();
+    })
   });
 });

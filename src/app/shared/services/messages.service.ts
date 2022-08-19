@@ -37,7 +37,7 @@ export class MessagesService {
     );
   }
 
-  setupConsumer(consumerName: string): Observable<void>
+  setupConsumer(consumerName: string): Observable<string>
   {
     let request = {
       name: "",
@@ -50,10 +50,9 @@ export class MessagesService {
 
     return this.http.post(`http://localhost:4200/api/consumers/${consumerName}`, request, {headers: headers}).pipe(
       map(() => {
-        return void 0;
+        return "";
       })
     )
-    
   }
 
   getNewestMessages()

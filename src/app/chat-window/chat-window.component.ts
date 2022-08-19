@@ -19,8 +19,6 @@ export class ChatWindowComponent implements OnInit {
   }
 
   sendText(): void {
-    debugger;
-
     this.messagesService.postMessage(this.nameFormControl.value, this.textMessageFormControl.value).subscribe();
   }  
 }
