@@ -63,9 +63,6 @@ describe('MessagesService', () => {
 
   describe('when setupConsumer is called', () => {
     it('calls http client to create a kafka consumer on the proxy server', () => {
-      //curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" 
-      //--data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}'
-      // http://localhost:8082/consumers/my_json_consumer
       let consumerName = Random.String();
 
       let expectedRequest = {
@@ -77,7 +74,7 @@ describe('MessagesService', () => {
       let expectedHeaders = new HttpHeaders();
       expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
 
-      let response = service.setupConsumer();
+      let response = service.setupConsumer(consumerName).subscribe();
       
       const req = httpTestController.expectOne(`http://localhost:4200/api/consumers/${consumerName}`);
 

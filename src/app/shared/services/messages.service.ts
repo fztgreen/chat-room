@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
+import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 
@@ -26,7 +27,6 @@ export class MessagesService {
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/vnd.kafka.json.v2+json");
     headers = headers.append("Accept", "application/vnd.kafka.v2+json");
-    // headers = headers.append("Access-Control-Allow-Origin", "*");
     
     console.log(expectedRequest)
 
@@ -37,12 +37,27 @@ export class MessagesService {
     );
   }
 
-  setupConsumer()
+  setupConsumer(consumerName: string): Observable<void>
   {
+    let request = {
+      name: "",
+      format: "",
+      "auto.offset.reset": "",
+    } as KafkaCreateConsumerRequest
+
+    let headers = new HttpHeaders();
+    headers = headers.append("Content-Type", "application/vnd.kafka.v2+json");
+
+    return this.http.post(`http://localhost:4200/api/consumers/${consumerName}`, request, {headers: headers}).pipe(
+      map(() => {
+        return void 0;
+      })
+    )
+    
   }
 
   getNewestMessages()
   {
-    
+
   }
 }
