@@ -38,20 +38,21 @@ export class MessagesService {
     );
   }
 
-  setupConsumer(consumerName: string): Observable<string>
+  setupConsumer(): Observable<string>
   {
+    var consumerName = Random.String();
     let request = {
-      name: "",
-      format: "",
-      "auto.offset.reset": "",
+      name: consumerName,
+      format: "json",
+      "auto.offset.reset": "earliest",
     } as KafkaCreateConsumerRequest
 
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/vnd.kafka.v2+json");
 
-    return this.http.post(`http://localhost:4200/api/consumers/${consumerName}`, request, {headers: headers}).pipe(
+    return this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers}).pipe(
       map(() => {
-        return Random.String();
+        return consumerName;
       })
     )
   }

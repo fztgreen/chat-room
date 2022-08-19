@@ -63,38 +63,39 @@ describe('MessagesService', () => {
 
   describe('when setupConsumer is called', () => {
     it('calls http client to create a kafka consumer on the proxy server', () => {
-      let consumerName = Random.String();
-
       let expectedRequest = {
         name: "",
-        format: "",
-        "auto.offset.reset": "",
+        format: "json",
+        "auto.offset.reset": "earliest",
       } as KafkaCreateConsumerRequest
 
       let expectedHeaders = new HttpHeaders();
       expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
 
-      let response = service.setupConsumer(consumerName).subscribe();
-      
-      const req = httpTestController.expectOne(`http://localhost:4200/api/consumers/${consumerName}`);
+      let response = service.setupConsumer().subscribe();
+      var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
+      const req = httpTestController.expectOne(requestUrl);
 
       expect(req.request.headers).toEqual(expectedHeaders);
-      expect(req.request.body).toEqual(expectedRequest);
+      expect((req.request.body as KafkaCreateConsumerRequest).name).toBeTruthy();
+      expect((req.request.body as KafkaCreateConsumerRequest).format).toEqual(expectedRequest.format);
+      expect((req.request.body as KafkaCreateConsumerRequest)["auto.offset.reset"]).toEqual(expectedRequest["auto.offset.reset"]);
       expect(req.request.method).toEqual("POST");
       httpTestController.verify();
     });
 
     it('returns the name of the created consumer', () => {
-      let consumerName = Random.String();
-
-      let response = service.setupConsumer(consumerName).subscribe({
+      let a = "";
+      let response = service.setupConsumer().subscribe({
         next: p => {
-          expect(p).toBeTruthy();
+          expect(p).toBe(a);
         }
       });
 
       const req = httpTestController.expectOne(() => true);
-      req.flush(consumerName);
+      
+      a = (req.request.body as KafkaCreateConsumerRequest).name;
+      req.flush(a);
       httpTestController.verify();
     })
   });
