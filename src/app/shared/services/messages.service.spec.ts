@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
+import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 import { MessagesService } from './messages.service';
@@ -95,6 +96,20 @@ describe('MessagesService', () => {
       a = (req.request.body as KafkaCreateConsumerRequest).name;
       req.flush(a);
       httpTestController.verify();
+    })  
+
+    it('should establish a connection to the given topic', () => {
+      let expectedRequest = {
+        topics: ["chat1"]
+      } as KafkaEstablishTopicRequest;
+
+      let expectedRequestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription";
+
+      let response = service.setupConsumer().subscribe();
+
+      const req = httpTestController.expectOne(expectedRequestUrl);
+
+      expect(req.request.body).toEqual(expectedRequest);
     })
   });
 });

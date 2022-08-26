@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Random } from 'random-test-values';
-import { map, Observable, of } from 'rxjs';
+import { forkJoin, map, Observable, tap } from 'rxjs';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
+import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 
@@ -47,13 +48,29 @@ export class MessagesService {
       "auto.offset.reset": "earliest",
     } as KafkaCreateConsumerRequest
 
+    let establishTopicRequest = {
+      topics: ["chat1"]
+    } as KafkaEstablishTopicRequest;
+
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/vnd.kafka.v2+json");
 
-    return this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers}).pipe(
-      map(() => {
-        return consumerName;
-      })
+    let requestResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers});
+    let establishTopicResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerName}/subscription`, establishTopicRequest);
+    
+    return requestResponse.pipe(
+      tap(() => {
+          establishTopicResponse.pipe(
+          map(() => {
+            return consumerName;
+          })
+        );
+      }),
+      map(
+        () => {
+          return consumerName;
+        }
+      )
     )
   }
 
