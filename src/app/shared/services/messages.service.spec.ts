@@ -71,7 +71,7 @@ describe('MessagesService', () => {
       let expectedHeaders = new HttpHeaders();
       expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
 
-      let response = service.setupConsumer().subscribe();
+      let response = service.setupConsumer();
       var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
       const req = httpTestController.expectOne(requestUrl);
 
@@ -85,17 +85,16 @@ describe('MessagesService', () => {
 
     it('returns the name of the created consumer', () => {
       let a = "";
-      let response = service.setupConsumer().subscribe({
-        next: p => {
-          expect(p).toBe(a);
-        }
-      });
+      let response = service.setupConsumer();
 
       const req = httpTestController.expectOne(() => true);
       
       a = (req.request.body as KafkaCreateConsumerRequest).name;
       req.flush(a);
+
       httpTestController.verify();
+
+      response.then((value) => expect(value).toBe(a));
     })  
 
     it('should establish a connection to the given topic', () => {
@@ -105,11 +104,16 @@ describe('MessagesService', () => {
 
       let expectedRequestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription";
 
-      let response = service.setupConsumer().subscribe();
+      let response = service.setupConsumer();
 
-      const req = httpTestController.expectOne(expectedRequestUrl);
+      var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
+      const req1 = httpTestController.expectOne(requestUrl);
+      req1.flush("random");
 
-      expect(req.request.body).toEqual(expectedRequest);
+      const req2 = httpTestController.expectOne(expectedRequestUrl);
+      req2.flush("random");
+
+      expect(req2.request.body).toEqual(expectedRequest);
     })
   });
 });

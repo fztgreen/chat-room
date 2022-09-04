@@ -16,9 +16,9 @@ export class ChatWindowComponent implements OnInit {
   constructor(private messagesService: MessagesService) { }
 
   ngOnInit(): void {
-    let result = this.messagesService.setupConsumer().subscribe((r) => {
-      console.log(r);
-    });
+    // let result = this.messagesService.setupConsumer().subscribe((r) => {
+    //   console.log(r);
+    // });
   }
 
   sendText(): void {
