@@ -5,8 +5,10 @@ import { Random } from 'random-test-values';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaSendMessage } from '../models/kafka-send-message';
+import { KafkaRetrieveMessage } from '../models/kafka-retrieve-message';
 import { SendMessage } from '../models/send-message';
 import { MessagesService } from './messages.service';
+import { KafkaKeyValue } from '../models/kafka-key-value';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -124,16 +126,36 @@ describe('MessagesService', () => {
   });
 
   describe('When getNewestMessages is called', () => {
-    it('Retrieves the newest messages from kafka', () => {
+    it('Retrieves the newest messages from kafka', async () => {
       // curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" 
       //http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance/records
       let consumerInstance = Random.String();
       let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
       
-      service.getNewestMessages(consumerInstance);
+      var expectedMessages = [
+        {
+          key: "key",
+          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage,
+        {
+          key: "key",
+          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage
+      ]
+
+      var actualMessages = service.getNewestMessages(consumerInstance);
 
       let actualRequest = httpTestController.match(() => true)[0];
       expect(actualRequest?.request?.url).toBe(expectedRequestUrl);
+      actualRequest.flush(expectedMessages);
+
+      expect(await actualMessages).toEqual(expectedMessages);
     });
   });
 });

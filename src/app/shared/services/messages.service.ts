@@ -4,6 +4,8 @@ import { Random } from 'random-test-values';
 import { firstValueFrom, forkJoin, map, Observable, tap } from 'rxjs';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
+import { KafkaKeyValue } from '../models/kafka-key-value';
+import { KafkaRetrieveMessage } from '../models/kafka-retrieve-message';
 import { KafkaSendMessage } from '../models/kafka-send-message';
 import { SendMessage } from '../models/send-message';
 
@@ -22,7 +24,7 @@ export class MessagesService {
             user: user,
             message: message
           } as SendMessage
-        }
+        } as KafkaKeyValue
       ]
     } as KafkaSendMessage
 
@@ -67,10 +69,12 @@ export class MessagesService {
     return consumerName;
   }
 
-  getNewestMessages(consumerInstance: string): void
+  getNewestMessages(consumerInstance: string): Promise<[KafkaRetrieveMessage]>
   {
     let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
     var request = this.http.get(requestUrl);
     request.subscribe();
+
+    return {} as Promise<[KafkaRetrieveMessage]>;
   }
 }
