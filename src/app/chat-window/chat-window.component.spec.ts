@@ -85,5 +85,37 @@ describe('ChatWindowComponent', () => {
       expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
       expect(component.messageLog).toEqual(expectedMessages);
     });
+
+    it('should append new messages on the form', () => {
+      var existingMessages = [
+        {
+          key: "key",
+          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage
+      ]
+
+      var expectedMessages = [
+        {
+          key: "key",
+          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage
+      ]
+
+      component.consumerInstance = Random.String();
+      component.messageLog = existingMessages;
+
+      messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
+
+      component.getNewestMessages();
+
+      expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
+      expect(component.messageLog).toEqual(existingMessages.concat(expectedMessages));
+    });
   });
 });
