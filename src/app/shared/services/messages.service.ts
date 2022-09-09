@@ -69,12 +69,11 @@ export class MessagesService {
     return consumerName;
   }
 
-  getNewestMessages(consumerInstance: string): Promise<[KafkaRetrieveMessage]>
+  getNewestMessages(consumerInstance: string): Observable<[KafkaRetrieveMessage]>
   {
     let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
     var request = this.http.get(requestUrl);
-    request.subscribe();
 
-    return {} as Promise<[KafkaRetrieveMessage]>;
+    return request.pipe(map(result => result as [KafkaRetrieveMessage]));
   }
 }

@@ -149,13 +149,15 @@ describe('MessagesService', () => {
         } as KafkaRetrieveMessage
       ]
 
-      var actualMessages = service.getNewestMessages(consumerInstance);
+      var actualMessages = service.getNewestMessages(consumerInstance).subscribe({
+        next: p => expect(p).toBe(expectedMessages)
+      });
 
       let actualRequest = httpTestController.match(() => true)[0];
       expect(actualRequest?.request?.url).toBe(expectedRequestUrl);
       actualRequest.flush(expectedMessages);
 
-      expect(await actualMessages).toEqual(expectedMessages);
+      httpTestController.verify();
     });
   });
 });
