@@ -61,7 +61,7 @@ export class MessagesService {
     let establishTopicResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerName}/subscription`, establishTopicRequest, {headers: headers});
     
     // createConsumerResponse.subscribe();
-    establishTopicResponse.subscribe();
+    // establishTopicResponse.subscribe();
     
     await firstValueFrom(createConsumerResponse);
     await firstValueFrom(establishTopicResponse);
@@ -71,10 +71,10 @@ export class MessagesService {
 
   getNewestMessages(consumerInstance: string): Observable<KafkaRetrieveMessage[]>
   {
-    let requestHeaders = new HttpHeaders().append("Content-Type", "application/vnd.kafka.v2+json");
+    let requestHeaders = new HttpHeaders().append("Accept", "application/vnd.kafka.json.v2+json");
     let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
     var request = this.http.get(requestUrl, {headers: requestHeaders});
 
-    return request.pipe(map(result => result as [KafkaRetrieveMessage]));
+    return request.pipe(tap(result => console.log(result)), map(result => result as [KafkaRetrieveMessage]));
   }
 }

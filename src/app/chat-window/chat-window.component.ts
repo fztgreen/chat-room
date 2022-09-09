@@ -16,7 +16,6 @@ export class ChatWindowComponent implements OnInit {
   nameFormControl = new FormControl('');
   textMessageFormControl = new FormControl('');
   
-
   constructor(private messagesService: MessagesService) { }
 
   async ngOnInit(): Promise<void> {
