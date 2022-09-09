@@ -17,8 +17,8 @@ export class ChatWindowComponent implements OnInit {
 
   constructor(private messagesService: MessagesService) { }
 
-  ngOnInit(): void {
-    // let result = this.messagesService.setupConsumer();
+  async ngOnInit(): Promise<void> {
+    this.consumerInstance = await this.messagesService.setupConsumer();
   }
 
   sendText(): void {

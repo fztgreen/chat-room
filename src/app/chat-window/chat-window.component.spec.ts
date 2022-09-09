@@ -13,7 +13,6 @@ describe('ChatWindowComponent', () => {
     messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage", "setupConsumer"]);
     messagesServiceSpy.postMessage.and.returnValue(of(void 0));
     
-
     await TestBed.configureTestingModule({
       declarations: [ ChatWindowComponent ],
       providers: [
@@ -34,11 +33,11 @@ describe('ChatWindowComponent', () => {
   });
 
   describe("ngOnInit", () => {
-    it('should setup the kafka consumer', () => {
+    it('should setup the kafka consumer', async () => {
       let expectedConsumerInstance = Random.String();
       messagesServiceSpy.setupConsumer.and.returnValue(firstValueFrom(of(expectedConsumerInstance)));
 
-      component.ngOnInit();
+      await component.ngOnInit();
 
       expect(component.consumerInstance).toBe(expectedConsumerInstance);
     });
