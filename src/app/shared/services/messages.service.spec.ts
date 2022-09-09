@@ -153,7 +153,12 @@ describe('MessagesService', () => {
         next: p => expect(p).toBe(expectedMessages)
       });
 
+      let expectedHeaders = new HttpHeaders();
+      expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
+
       let actualRequest = httpTestController.match(() => true)[0];
+      expect(actualRequest?.request?.method).toBe('GET');
+      expect(actualRequest?.request?.headers).toEqual(expectedHeaders);
       expect(actualRequest?.request?.url).toBe(expectedRequestUrl);
       actualRequest.flush(expectedMessages);
 
