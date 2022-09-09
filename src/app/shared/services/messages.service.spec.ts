@@ -112,9 +112,8 @@ describe('MessagesService', () => {
       const req1 = httpTestController.match(requestUrl)[0];
       req1.flush("random");
 
-      debugger;
-
-      let expectedRequestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription";
+      let expectedConsumerName = (req1.request.body as KafkaCreateConsumerRequest).name;
+      let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${expectedConsumerName}/subscription`;
       const req2 = httpTestController.match(expectedRequestUrl)[0];
       req2.flush("random");
 
