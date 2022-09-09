@@ -69,6 +69,8 @@ export class MessagesService {
 
   getNewestMessages(consumerInstance: string): void
   {
-    
+    let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
+    var request = this.http.get(requestUrl);
+    request.subscribe();
   }
 }
