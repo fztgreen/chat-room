@@ -69,7 +69,7 @@ export class MessagesService {
     return consumerName;
   }
 
-  getNewestMessages(consumerInstance: string): Observable<[KafkaRetrieveMessage]>
+  getNewestMessages(consumerInstance: string): Observable<KafkaRetrieveMessage[]>
   {
     let requestHeaders = new HttpHeaders().append("Content-Type", "application/vnd.kafka.v2+json");
     let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`

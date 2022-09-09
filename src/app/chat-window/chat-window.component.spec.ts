@@ -3,6 +3,9 @@ import { Random } from 'random-test-values';
 import { MessagesService } from '../shared/services/messages.service';
 import { ChatWindowComponent } from './chat-window.component';
 import { firstValueFrom, of } from 'rxjs'
+import { SendMessage } from '../shared/models/send-message';
+import { KafkaKeyValue } from '../shared/models/kafka-key-value';
+import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
 
 describe('ChatWindowComponent', () => {
   let component: ChatWindowComponent;
@@ -10,7 +13,7 @@ describe('ChatWindowComponent', () => {
   let messagesServiceSpy: jasmine.SpyObj<MessagesService>;
 
   beforeEach(async () => {
-    messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage", "setupConsumer"]);
+    messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage", "setupConsumer", "getNewestMessages"]);
     messagesServiceSpy.postMessage.and.returnValue(of(void 0));
     
     await TestBed.configureTestingModule({
@@ -30,6 +33,7 @@ describe('ChatWindowComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.messageLog).toEqual([]);
   });
 
   describe("ngOnInit", () => {
@@ -50,6 +54,36 @@ describe('ChatWindowComponent', () => {
       let result = component.sendText();
 
       expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.nameFormControl.value, component.textMessageFormControl.value);
+    });
+  });
+
+  describe("getNewestMessages", () => {
+    it('should populate new messages on the form', () => {
+      var expectedMessages = [
+        {
+          key: "key",
+          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage,
+        {
+          key: "key",
+          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+          partition: 0,
+          offset: 0,
+          topic: "chat1"
+        } as KafkaRetrieveMessage
+      ]
+
+      component.consumerInstance = Random.String();
+
+      messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
+
+      component.getNewestMessages();
+
+      expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
+      expect(component.messageLog).toEqual(expectedMessages);
     });
   });
 });
