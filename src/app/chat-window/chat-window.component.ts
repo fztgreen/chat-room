@@ -30,7 +30,7 @@ export class ChatWindowComponent implements OnInit {
   getNewestMessages(): void {
     this.messagesService.getNewestMessages(this.consumerInstance).subscribe(
       {
-        next: result => this.messageLog = result 
+        next: result => this.messageLog = this.messageLog.concat(result) 
       }
     );
   }
