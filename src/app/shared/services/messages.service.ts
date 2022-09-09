@@ -55,11 +55,13 @@ export class MessagesService {
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/vnd.kafka.v2+json");
 
-    let requestResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers});
-    let establishTopicResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription`, establishTopicRequest);
+    let createConsumerResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers});
+    let establishTopicResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription`, establishTopicRequest, {headers: headers});
     
-    await firstValueFrom(requestResponse);
-
+    createConsumerResponse.subscribe();
+    establishTopicResponse.subscribe();
+    
+    await firstValueFrom(createConsumerResponse);
     await firstValueFrom(establishTopicResponse);
 
     return consumerName;

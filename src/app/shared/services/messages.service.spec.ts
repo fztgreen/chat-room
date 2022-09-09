@@ -73,13 +73,15 @@ describe('MessagesService', () => {
 
       let response = service.setupConsumer();
       var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
-      const req = httpTestController.expectOne(requestUrl);
+      const req = httpTestController.match(requestUrl)[0];
 
       expect(req.request.headers).toEqual(expectedHeaders);
       expect((req.request.body as KafkaCreateConsumerRequest).name).toBeTruthy();
       expect((req.request.body as KafkaCreateConsumerRequest).format).toEqual(expectedRequest.format);
       expect((req.request.body as KafkaCreateConsumerRequest)["auto.offset.reset"]).toEqual(expectedRequest["auto.offset.reset"]);
       expect(req.request.method).toEqual("POST");
+
+      httpTestController.match(x => x.url != "").forEach(r => r.flush("any"));
       httpTestController.verify();
     });
 
@@ -87,10 +89,12 @@ describe('MessagesService', () => {
       let a = "";
       let response = service.setupConsumer();
 
-      const req = httpTestController.expectOne(() => true);
+      const req = httpTestController.match("http://localhost:4200/api/consumers/kafka_chat_consumer")[0];
       
       a = (req.request.body as KafkaCreateConsumerRequest).name;
       req.flush(a);
+
+      httpTestController.match(x => x.url != "").forEach(r => r.flush("any"));
 
       httpTestController.verify();
 
@@ -102,18 +106,21 @@ describe('MessagesService', () => {
         topics: ["chat1"]
       } as KafkaEstablishTopicRequest;
 
-      let expectedRequestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription";
-
       let response = service.setupConsumer();
 
       var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
-      const req1 = httpTestController.expectOne(requestUrl);
+      const req1 = httpTestController.match(requestUrl)[0];
       req1.flush("random");
 
-      const req2 = httpTestController.expectOne(expectedRequestUrl);
+      debugger;
+
+      let expectedRequestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer/instances/123/subscription";
+      const req2 = httpTestController.match(expectedRequestUrl)[0];
       req2.flush("random");
 
       expect(req2.request.body).toEqual(expectedRequest);
+
+      httpTestController.verify();
     })
   });
 });
