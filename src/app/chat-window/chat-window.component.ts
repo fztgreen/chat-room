@@ -10,15 +10,15 @@ import { tap } from 'rxjs';
 })
 export class ChatWindowComponent implements OnInit {
   
+  consumerInstance!: string;
+
   nameFormControl = new FormControl('');
   textMessageFormControl = new FormControl('');
 
   constructor(private messagesService: MessagesService) { }
 
   ngOnInit(): void {
-    // let result = this.messagesService.setupConsumer().subscribe((r) => {
-    //   console.log(r);
-    // });
+    // let result = this.messagesService.setupConsumer();
   }
 
   sendText(): void {

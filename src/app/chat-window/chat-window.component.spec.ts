@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Random } from 'random-test-values';
 import { MessagesService } from '../shared/services/messages.service';
 import { ChatWindowComponent } from './chat-window.component';
-import { of } from 'rxjs'
+import { firstValueFrom, of } from 'rxjs'
 
 describe('ChatWindowComponent', () => {
   let component: ChatWindowComponent;
@@ -10,8 +10,9 @@ describe('ChatWindowComponent', () => {
   let messagesServiceSpy: jasmine.SpyObj<MessagesService>;
 
   beforeEach(async () => {
-    messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage"]);
+    messagesServiceSpy = jasmine.createSpyObj(MessagesService.name, ["postMessage", "setupConsumer"]);
     messagesServiceSpy.postMessage.and.returnValue(of(void 0));
+    
 
     await TestBed.configureTestingModule({
       declarations: [ ChatWindowComponent ],
@@ -30,6 +31,17 @@ describe('ChatWindowComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe("ngOnInit", () => {
+    it('should setup the kafka consumer', () => {
+      let expectedConsumerInstance = Random.String();
+      messagesServiceSpy.setupConsumer.and.returnValue(firstValueFrom(of(expectedConsumerInstance)));
+
+      component.ngOnInit();
+
+      expect(component.consumerInstance).toBe(expectedConsumerInstance);
+    });
   });
 
   describe("sendText", () => {
