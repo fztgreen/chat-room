@@ -67,8 +67,8 @@ export class MessagesService {
     return consumerName;
   }
 
-  getNewestMessages()
+  getNewestMessages(consumerInstance: string): void
   {
-
+    
   }
 }

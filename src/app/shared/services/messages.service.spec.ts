@@ -122,4 +122,18 @@ describe('MessagesService', () => {
       httpTestController.verify();
     })
   });
+
+  describe('When getNewestMessages is called', () => {
+    it('Retrieves the newest messages from kafka', () => {
+      // curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" 
+      //http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance/records
+      let consumerName = Random.String();
+      let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerName}/records`
+      
+      service.getNewestMessages(consumerName);
+
+      let actualRequest = httpTestController.match(() => true)[0];
+      expect(actualRequest?.request?.url).toBe(expectedRequestUrl);
+    });
+  });
 });
