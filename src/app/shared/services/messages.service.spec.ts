@@ -103,7 +103,7 @@ describe('MessagesService', () => {
       response.then((value) => expect(value).toBe(a));
     })  
 
-    it('should establish a connection to the given topic', () => {
+    it('should establish a connection to the given topic', async () => {
       let expectedRequest = {
         topics: ["chat1"]
       } as KafkaEstablishTopicRequest;
@@ -118,6 +118,8 @@ describe('MessagesService', () => {
       let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${expectedConsumerName}/subscription`;
       const req2 = httpTestController.match(expectedRequestUrl)[0];
       req2.flush("random");
+
+      await response;
 
       expect(req2.request.body).toEqual(expectedRequest);
 
@@ -154,7 +156,7 @@ describe('MessagesService', () => {
       });
 
       let expectedHeaders = new HttpHeaders();
-      expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
+      expectedHeaders = expectedHeaders.append("Accept", "application/vnd.kafka.json.v2+json");
 
       let actualRequest = httpTestController.match(() => true)[0];
       expect(actualRequest?.request?.method).toBe('GET');

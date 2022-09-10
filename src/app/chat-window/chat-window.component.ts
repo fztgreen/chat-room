@@ -33,4 +33,8 @@ export class ChatWindowComponent implements OnInit {
       }
     );
   }
+
+  getMessages(): string {
+    return JSON.stringify(this.messageLog);
+  }
 }

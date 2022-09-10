@@ -3,4 +3,4 @@
 <input matInput label="Enter a message" [formControl]="textMessageFormControl">
 <button mat-button (click)="sendText()">Click me!</button>
 <button mat-button (click)="getNewestMessages()">Get New Messages</button>
-<p>{{messageLog}}</p>
+<p>{{getMessages()}}</p>
