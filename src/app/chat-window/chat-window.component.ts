@@ -25,7 +25,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // throw new Error('Method not implemented.');
+    this.chatMessageSubscription.unsubscribe();
   }
 
   sendText(): void {

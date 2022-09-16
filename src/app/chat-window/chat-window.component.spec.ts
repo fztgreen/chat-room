@@ -31,7 +31,8 @@ describe('ChatWindowComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    await component.ngOnInit();
     expect(component).toBeTruthy();
     expect(component.messageLog).toEqual([]);
   });
@@ -50,6 +51,8 @@ describe('ChatWindowComponent', () => {
       messagesServiceSpy.getNewestMessages.and.returnValue(of([]))
       await component.ngOnInit();
 
+      expect(component.chatMessageSubscription.closed).toBeFalse();
+
       let offset = Random.Number({max: 4999})
       tick(5000 - offset);
 
@@ -63,75 +66,93 @@ describe('ChatWindowComponent', () => {
     }));
   });
 
-  describe("sendText", () => {
-    it('should send a message', () => {
-      component.textMessageFormControl.setValue(Random.String());
-      component.nameFormControl.setValue(Random.String());
-      let result = component.sendText();
+  describe("ngOnDestroy", () => {
+    it('should remove the subscription to the getNewestMessages', async () => {
+      await component.ngOnInit();
 
-      expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.nameFormControl.value, component.textMessageFormControl.value);
+      expect(component.chatMessageSubscription.closed).toBeFalse();
+      component.ngOnDestroy();
+
+      expect(component.chatMessageSubscription.closed).toBeTrue();
     });
-  });
+  })
 
-  describe("getNewestMessages", () => {
-    it('should populate new messages on the form', () => {
-      var expectedMessages = [
-        {
-          key: "key",
-          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
-          partition: 0,
-          offset: 0,
-          topic: "chat1"
-        } as KafkaRetrieveMessage,
-        {
-          key: "key",
-          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
-          partition: 0,
-          offset: 0,
-          topic: "chat1"
-        } as KafkaRetrieveMessage
-      ]
-
-      component.consumerInstance = Random.String();
-
-      messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
-
-      component.getNewestMessages();
-
-      expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
-      expect(component.messageLog).toEqual(expectedMessages);
+  describe("methods on the chat window", () => {
+    beforeEach(async () => {
+      await component.ngOnInit();
     });
 
-    it('should append new messages on the form', () => {
-      var existingMessages = [
-        {
-          key: "key",
-          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
-          partition: 0,
-          offset: 0,
-          topic: "chat1"
-        } as KafkaRetrieveMessage
-      ]
-
-      var expectedMessages = [
-        {
-          key: "key",
-          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
-          partition: 0,
-          offset: 0,
-          topic: "chat1"
-        } as KafkaRetrieveMessage
-      ]
-
-      component.consumerInstance = Random.String();
-      component.messageLog = existingMessages;
-
-      messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
-
-      component.getNewestMessages();
-
-      expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
-      expect(component.messageLog).toEqual(existingMessages.concat(expectedMessages));
+    describe("sendText", () => {
+      it('should send a message', () => {
+        component.textMessageFormControl.setValue(Random.String());
+        component.nameFormControl.setValue(Random.String());
+        let result = component.sendText();
+  
+        expect(messagesServiceSpy.postMessage).toHaveBeenCalledOnceWith(component.nameFormControl.value, component.textMessageFormControl.value);
+      });
     });
-  });
+  
+    describe("getNewestMessages", () => {
+      it('should populate new messages on the form', () => {
+        var expectedMessages = [
+          {
+            key: "key",
+            value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+            partition: 0,
+            offset: 0,
+            topic: "chat1"
+          } as KafkaRetrieveMessage,
+          {
+            key: "key",
+            value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+            partition: 0,
+            offset: 0,
+            topic: "chat1"
+          } as KafkaRetrieveMessage
+        ];
+  
+        component.consumerInstance = Random.String();
+  
+        messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
+  
+        component.getNewestMessages();
+  
+        expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
+        expect(component.messageLog).toEqual(expectedMessages);
+      });
+  
+      it('should append new messages on the form', () => {
+        var existingMessages = [
+          {
+            key: "key",
+            value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+            partition: 0,
+            offset: 0,
+            topic: "chat1"
+          } as KafkaRetrieveMessage
+        ];
+  
+        var expectedMessages = [
+          {
+            key: "key",
+            value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+            partition: 0,
+            offset: 0,
+            topic: "chat1"
+          } as KafkaRetrieveMessage
+        ];
+  
+        component.consumerInstance = Random.String();
+        component.messageLog = existingMessages;
+  
+        messagesServiceSpy.getNewestMessages.and.returnValue(of(expectedMessages));
+  
+        component.getNewestMessages();
+  
+        expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalledOnceWith(component.consumerInstance);
+        expect(component.messageLog).toEqual(existingMessages.concat(expectedMessages));
+      });
+    });
+  })
+  
 });
