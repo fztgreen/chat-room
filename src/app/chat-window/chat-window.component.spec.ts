@@ -6,6 +6,7 @@ import { firstValueFrom, interval, of, tap } from 'rxjs'
 import { SendMessage } from '../shared/models/send-message';
 import { KafkaKeyValue } from '../shared/models/kafka-key-value';
 import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
+import { Message } from '../shared/models/message';
 
 describe('ChatWindowComponent', () => {
   let component: ChatWindowComponent;
@@ -95,20 +96,8 @@ describe('ChatWindowComponent', () => {
     describe("getNewestMessages", () => {
       it('should populate new messages on the form', () => {
         var expectedMessages = [
-          {
-            key: "key",
-            value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
-            partition: 0,
-            offset: 0,
-            topic: "chat1"
-          } as KafkaRetrieveMessage,
-          {
-            key: "key",
-            value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
-            partition: 0,
-            offset: 0,
-            topic: "chat1"
-          } as KafkaRetrieveMessage
+          {user: "steve", message: "message1"} as Message,
+          {user: "shelby", message: "message2"} as Message
         ];
   
         component.consumerInstance = Random.String();
@@ -123,23 +112,11 @@ describe('ChatWindowComponent', () => {
   
       it('should append new messages on the form', () => {
         var existingMessages = [
-          {
-            key: "key",
-            value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
-            partition: 0,
-            offset: 0,
-            topic: "chat1"
-          } as KafkaRetrieveMessage
+          {user: "steve", message: "message1"} as Message
         ];
   
         var expectedMessages = [
-          {
-            key: "key",
-            value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
-            partition: 0,
-            offset: 0,
-            topic: "chat1"
-          } as KafkaRetrieveMessage
+          {user: "shelby", message: "message2"} as Message
         ];
   
         component.consumerInstance = Random.String();
@@ -153,6 +130,16 @@ describe('ChatWindowComponent', () => {
         expect(component.messageLog).toEqual(existingMessages.concat(expectedMessages));
       });
     });
+
+    describe("getMessages", () => {
+      it('should return a user friendly view of the chat history', () => {
+        component.messageLog = [
+          {user: "steve", message: "message1"} as Message,
+          {user: "shelby", message: "message2"} as Message
+        ];
+
+        expect(component.getMessages()).toEqual(JSON.stringify(component.messageLog));
+      })
+    });
   })
-  
 });

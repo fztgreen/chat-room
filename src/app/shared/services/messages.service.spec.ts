@@ -6,6 +6,7 @@ import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-requ
 import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaRetrieveMessage } from '../models/kafka-retrieve-message';
 import { KafkaSendMessage } from '../models/kafka-send-message';
+import { Message } from '../models/message';
 import { SendMessage } from '../models/send-message';
 import { MessagesService } from './messages.service';
 import { KafkaKeyValue } from '../models/kafka-key-value';
@@ -149,10 +150,21 @@ describe('MessagesService', () => {
           offset: 0,
           topic: "chat1"
         } as KafkaRetrieveMessage
-      ]
+      ] as KafkaRetrieveMessage[];
+
+      var expectedFriendlyMessages = [
+        {
+          user: (expectedMessages[0].value.value as SendMessage).user,
+          message: (expectedMessages[0].value.value as SendMessage).message
+        } as Message,
+        {
+          user: (expectedMessages[1].value.value as SendMessage).user,
+          message: (expectedMessages[1].value.value as SendMessage).message
+        } as Message
+      ] as Message[];
 
       var actualMessages = service.getNewestMessages(consumerInstance).subscribe({
-        next: p => expect(p).toBe(expectedMessages)
+        next: p => expect(p).toEqual(expectedFriendlyMessages)
       });
 
       let expectedHeaders = new HttpHeaders();

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MessagesService } from '../shared/services/messages.service';
 import { interval, Observable, Subscription, tap } from 'rxjs';
-import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
+import { Message } from '../shared/models/message';
 
 @Component({
   selector: 'app-chat-window',
@@ -12,7 +12,7 @@ import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
 export class ChatWindowComponent implements OnInit, OnDestroy {
   
   consumerInstance!: string;
-  messageLog: KafkaRetrieveMessage[] = [];
+  messageLog: Message[] = [];
   nameFormControl = new FormControl('');
   textMessageFormControl = new FormControl('');
   chatMessageSubscription!: Subscription;

@@ -7,6 +7,7 @@ import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-requ
 import { KafkaKeyValue } from '../models/kafka-key-value';
 import { KafkaRetrieveMessage } from '../models/kafka-retrieve-message';
 import { KafkaSendMessage } from '../models/kafka-send-message';
+import { Message } from '../models/message';
 import { SendMessage } from '../models/send-message';
 
 @Injectable({
@@ -67,12 +68,16 @@ export class MessagesService {
     return consumerName;
   }
 
-  getNewestMessages(consumerInstance: string): Observable<KafkaRetrieveMessage[]>
+  getNewestMessages(consumerInstance: string): Observable<Message[]>
   {
     let requestHeaders = new HttpHeaders().append("Accept", "application/vnd.kafka.json.v2+json");
     let requestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
     var request = this.http.get(requestUrl, {headers: requestHeaders});
 
-    return request.pipe(tap(result => console.log(result)), map(result => result as [KafkaRetrieveMessage]));
+    return request.pipe(tap(result => console.log(result)),
+     map(result => (result as KafkaRetrieveMessage[]).map<Message>(message => ({
+      user: (message.value.value as SendMessage).user,
+      message: (message.value.value as SendMessage).message
+    }) as Message)));
   }
 }
