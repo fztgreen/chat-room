@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { Random } from 'random-test-values';
 import { MessagesService } from '../shared/services/messages.service';
 import { ChatWindowComponent } from './chat-window.component';
-import { firstValueFrom, of } from 'rxjs'
+import { firstValueFrom, interval, of, tap } from 'rxjs'
 import { SendMessage } from '../shared/models/send-message';
 import { KafkaKeyValue } from '../shared/models/kafka-key-value';
 import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
@@ -45,6 +45,22 @@ describe('ChatWindowComponent', () => {
 
       expect(component.consumerInstance).toBe(expectedConsumerInstance);
     });
+
+    it('should set up a repeated call to getNewestMessages', fakeAsync(async () => {
+      messagesServiceSpy.getNewestMessages.and.returnValue(of([]))
+      await component.ngOnInit();
+
+      let offset = Random.Number({max: 4999})
+      tick(5000 - offset);
+
+      expect(messagesServiceSpy.getNewestMessages).not.toHaveBeenCalled();
+
+      tick(offset);
+
+      expect(messagesServiceSpy.getNewestMessages).toHaveBeenCalled();
+
+      discardPeriodicTasks()
+    }));
   });
 
   describe("sendText", () => {

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Random } from 'random-test-values';
-import { firstValueFrom, forkJoin, map, Observable, tap } from 'rxjs';
+import { first, firstValueFrom, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaKeyValue } from '../models/kafka-key-value';
@@ -60,11 +60,9 @@ export class MessagesService {
     let createConsumerResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer`, request, {headers: headers});
     let establishTopicResponse = this.http.post(`http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerName}/subscription`, establishTopicRequest, {headers: headers});
     
-    // createConsumerResponse.subscribe();
-    // establishTopicResponse.subscribe();
-    
-    await firstValueFrom(createConsumerResponse);
-    await firstValueFrom(establishTopicResponse);
+    await firstValueFrom(createConsumerResponse.pipe(
+      switchMap(() => establishTopicResponse)
+    ))
 
     return consumerName;
   }
