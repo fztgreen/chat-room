@@ -3,9 +3,6 @@ import { Random } from 'random-test-values';
 import { MessagesService } from '../shared/services/messages.service';
 import { ChatWindowComponent } from './chat-window.component';
 import { firstValueFrom, interval, of, tap } from 'rxjs'
-import { SendMessage } from '../shared/models/send-message';
-import { KafkaKeyValue } from '../shared/models/kafka-key-value';
-import { KafkaRetrieveMessage } from '../shared/models/kafka-retrieve-message';
 import { Message } from '../shared/models/message';
 
 describe('ChatWindowComponent', () => {

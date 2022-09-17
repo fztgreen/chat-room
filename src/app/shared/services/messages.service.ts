@@ -75,9 +75,12 @@ export class MessagesService {
     var request = this.http.get(requestUrl, {headers: requestHeaders});
 
     return request.pipe(tap(result => console.log(result)),
-     map(result => (result as KafkaRetrieveMessage[]).map<Message>(message => ({
-      user: (message.value.value as SendMessage).user,
-      message: (message.value.value as SendMessage).message
-    }) as Message)));
+     map(result => (result as [KafkaRetrieveMessage])
+      .map<Message>(message => ({
+          user: (message.value).user,
+          message: (message.value).message
+        }) as Message)
+      )
+    );
   }
 }

@@ -138,14 +138,14 @@ describe('MessagesService', () => {
       var expectedMessages = [
         {
           key: "key",
-          value: {key: "key", value: {user: "steve", message: "message1"} as SendMessage} as KafkaKeyValue,
+          value: {user: "steve", message: "message1"} as SendMessage,
           partition: 0,
           offset: 0,
           topic: "chat1"
         } as KafkaRetrieveMessage,
         {
           key: "key",
-          value: {key: "key", value: {user: "shelby", message: "message2"} as SendMessage} as KafkaKeyValue,
+          value: {user: "shelby", message: "message2"} as SendMessage,
           partition: 0,
           offset: 0,
           topic: "chat1"
@@ -154,12 +154,12 @@ describe('MessagesService', () => {
 
       var expectedFriendlyMessages = [
         {
-          user: (expectedMessages[0].value.value as SendMessage).user,
-          message: (expectedMessages[0].value.value as SendMessage).message
+          user: (expectedMessages[0].value).user,
+          message: (expectedMessages[0].value).message
         } as Message,
         {
-          user: (expectedMessages[1].value.value as SendMessage).user,
-          message: (expectedMessages[1].value.value as SendMessage).message
+          user: (expectedMessages[1].value).user,
+          message: (expectedMessages[1].value).message
         } as Message
       ] as Message[];
 
