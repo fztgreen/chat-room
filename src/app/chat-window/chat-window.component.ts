@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MessagesService } from '../shared/services/messages.service';
-import { interval, Observable, Subscription, tap } from 'rxjs';
+import { interval, Observable, Subscription, tap, catchError } from 'rxjs';
 import { Message } from '../shared/models/message';
+import { Random } from 'random-test-values';
 
 @Component({
   selector: 'app-chat-window',
@@ -13,7 +14,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   
   consumerInstance!: string;
   messageLog: Message[] = [];
-  nameFormControl = new FormControl('');
+  nameFormControl = new FormControl("User-" + Random.String({minLength: 8, maxLength: 8}));
   textMessageFormControl = new FormControl('');
   chatMessageSubscription!: Subscription;
   
@@ -40,7 +41,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     );
   }
 
-  getMessages(): string {
-    return JSON.stringify(this.messageLog);
+  getMessages(): Message[] {
+    return this.messageLog;
   }
 }

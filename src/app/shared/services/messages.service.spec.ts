@@ -75,8 +75,7 @@ describe('MessagesService', () => {
       expectedHeaders = expectedHeaders.append("Content-Type", "application/vnd.kafka.v2+json");
 
       let response = service.setupConsumer();
-      var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
-      const req = httpTestController.match(requestUrl)[0];
+      const req = httpTestController.match(() => true)[0];
 
       expect(req.request.headers).toEqual(expectedHeaders);
       expect((req.request.body as KafkaCreateConsumerRequest).name).toBeTruthy();
@@ -92,7 +91,7 @@ describe('MessagesService', () => {
       let a = "";
       let response = service.setupConsumer();
 
-      const req = httpTestController.match("http://localhost:4200/api/consumers/kafka_chat_consumer")[0];
+      const req = httpTestController.match(() => true)[0];
       
       a = (req.request.body as KafkaCreateConsumerRequest).name;
       req.flush(a);
@@ -101,7 +100,10 @@ describe('MessagesService', () => {
 
       httpTestController.verify();
 
-      response.then((value) => expect(value).toBe(a));
+      response.then((value) => {
+        expect(value).toBe(a);
+        expect(req.request.url).toEqual(`http://localhost:4200/api/consumers/${value}`);
+      });
     })  
 
     it('should establish a connection to the given topic', async () => {
@@ -111,12 +113,11 @@ describe('MessagesService', () => {
 
       let response = service.setupConsumer();
 
-      var requestUrl = "http://localhost:4200/api/consumers/kafka_chat_consumer";
-      const req1 = httpTestController.match(requestUrl)[0];
+      const req1 = httpTestController.match(() => true)[0];
       req1.flush("random");
 
       let expectedConsumerName = (req1.request.body as KafkaCreateConsumerRequest).name;
-      let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${expectedConsumerName}/subscription`;
+      let expectedRequestUrl = `http://localhost:4200/api/consumers/${expectedConsumerName}/instances/${expectedConsumerName}/subscription`;
       const req2 = httpTestController.match(expectedRequestUrl)[0];
       req2.flush("random");
 
@@ -133,7 +134,7 @@ describe('MessagesService', () => {
       // curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" 
       //http://localhost:8082/consumers/my_json_consumer/instances/my_consumer_instance/records
       let consumerInstance = Random.String();
-      let expectedRequestUrl = `http://localhost:4200/api/consumers/kafka_chat_consumer/instances/${consumerInstance}/records`
+      let expectedRequestUrl = `http://localhost:4200/api/consumers/${consumerInstance}/instances/${consumerInstance}/records`
       
       var expectedMessages = [
         {

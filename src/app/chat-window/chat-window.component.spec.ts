@@ -135,7 +135,7 @@ describe('ChatWindowComponent', () => {
           {user: "shelby", message: "message2"} as Message
         ];
 
-        expect(component.getMessages()).toEqual(JSON.stringify(component.messageLog));
+        expect(component.getMessages()).toEqual(component.messageLog);
       })
     });
   })

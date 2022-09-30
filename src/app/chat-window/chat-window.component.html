@@ -1,7 +1,17 @@
 <p>chat-window works!</p>
-<input matInput label="Enter your name" [formControl]="nameFormControl">
-<button mat-button (click)="sendText()">Click me!</button>
-<input matInput label="Enter a message" [formControl]="textMessageFormControl">
-<button mat-button (click)="getNewestMessages()">Get New Messages</button>
+<div>
+    <span>
+        <!-- <input matInput label="Enter your name" [formControl]="nameFormControl"> -->
+        <input matInput label="Enter a message" [formControl]="textMessageFormControl">
+    </span>
+    <button mat-button (click)="sendText()">Click me!</button>
+</div>
+<div>
+    <button mat-button (click)="getNewestMessages()">Get New Messages</button>
+</div>
 
-<p>{{getMessages()}}</p>
+<div *ngFor="let message of getMessages();" >
+    <p>{{message.message}}</p>
+    <p>from {{message.user}}</p>
+    <p>---</p>
+</div>
