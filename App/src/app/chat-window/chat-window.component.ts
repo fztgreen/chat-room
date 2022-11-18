@@ -4,6 +4,7 @@ import { MessagesService } from '../shared/services/messages.service';
 import { interval, Observable, Subscription, tap, catchError } from 'rxjs';
 import { Message } from '../shared/models/message';
 import { Random } from 'random-test-values';
+import { WebsocketService } from '../shared/services/websocket.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -18,11 +19,19 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   textMessageFormControl = new FormControl('');
   chatMessageSubscription!: Subscription;
   
-  constructor(private messagesService: MessagesService) { }
+  constructor(private messagesService: MessagesService,
+     private websocketService: WebsocketService) { }
   
   async ngOnInit(): Promise<void> {
     this.consumerInstance = await this.messagesService.setupConsumer();
-    this.chatMessageSubscription = interval(5000).pipe(tap(() => this.getNewestMessages())).subscribe();
+    // this.chatMessageSubscription = interval(5000).pipe(tap(() => this.getNewestMessages())).subscribe();
+    this.websocketService.messages.subscribe(
+      {
+        next: result => {
+          this.messageLog = this.messageLog.concat(result) 
+        }
+      }
+    );
   }
 
   ngOnDestroy(): void {

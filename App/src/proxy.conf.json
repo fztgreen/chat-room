@@ -7,5 +7,15 @@
 		"pathRewrite": {
 			"^/api/*": "/"
 		  }
-	}
+	},
+
+	"/stream/*": {
+		"target": "wss://localhost:7284/ws",
+		"secure": true,
+		"ws": true,
+		"changeOrigin": false,
+		"pathRewrite": {
+			"^/api/*": "/"
+		  }
+	  }
 }

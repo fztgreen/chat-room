@@ -33,7 +33,7 @@ export class MessagesService {
     headers = headers.append("Content-Type", "application/vnd.kafka.json.v2+json");
     headers = headers.append("Accept", "application/vnd.kafka.v2+json");
     
-    console.log(expectedRequest)
+    //console.log(expectedRequest)
 
     return this.http.post("http://localhost:4200/api/topics/chat1", expectedRequest, {headers: headers}).pipe(
       map(() => {
