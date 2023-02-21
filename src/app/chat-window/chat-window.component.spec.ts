@@ -1,9 +1,9 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Random } from 'random-test-values';
+import { firstValueFrom, of } from 'rxjs';
+import { Message } from '../shared/models/message';
 import { MessagesService } from '../shared/services/messages.service';
 import { ChatWindowComponent } from './chat-window.component';
-import { firstValueFrom, interval, of, tap } from 'rxjs'
-import { Message } from '../shared/models/message';
 
 describe('ChatWindowComponent', () => {
   let component: ChatWindowComponent;

@@ -9,7 +9,6 @@ import { KafkaSendMessage } from '../models/kafka-send-message';
 import { Message } from '../models/message';
 import { SendMessage } from '../models/send-message';
 import { MessagesService } from './messages.service';
-import { KafkaKeyValue } from '../models/kafka-key-value';
 
 describe('MessagesService', () => {
   let service: MessagesService;

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MessagesService } from '../shared/services/messages.service';
-import { interval, Observable, Subscription, tap, catchError } from 'rxjs';
-import { Message } from '../shared/models/message';
 import { Random } from 'random-test-values';
+import { interval, Subscription, tap } from 'rxjs';
+import { Message } from '../shared/models/message';
+import { MessagesService } from '../shared/services/messages.service';
 
 @Component({
   selector: 'app-chat-window',
