@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Random } from 'random-test-values';
-import { first, firstValueFrom, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, switchMap, tap } from 'rxjs';
 import { KafkaCreateConsumerRequest } from '../models/kafka-create-consumer-request';
 import { KafkaEstablishTopicRequest } from '../models/kafka-establish-topic-request';
 import { KafkaKeyValue } from '../models/kafka-key-value';
